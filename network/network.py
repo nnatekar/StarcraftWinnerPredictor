@@ -42,12 +42,29 @@ class Network:
         for layer in layer_numbers:
             if layer < 0 or layer > self.num_layers:
                 raise IndexError('Invalid layer number')
-            elif len(weights[layer]) != len(
-                    self.model.layers[layer].get_weights()):
-                raise ValueError(
-                    'Number of weights does not match number of nodes')
+
+            if weights[layer][0].__class__ == \
+                    self.get_weights(layer)[0].__class__:
+                if len(weights[layer]) != len(self.get_weights(layer)) or len(
+                        weights[layer][0]) != len(self.get_weights(layer)[0]) or \
+                        len(weights[layer][0][0]) \
+                        != len(self.get_weights(layer)[0][0]):
+                    raise ValueError(
+                        'Number of weights does not match number of nodes')
+                else:
+                    self.model.layers[layer].set_weights(weights[layer])
             else:
-                self.model.layers[layer].set_weights(weights[layer])
+                weight = self.get_weights(layer)
+                if len(weight[0]) != len(weights[layer]) or len(weight[0][0]) \
+                        != len(weights[layer][0]):
+                    raise ValueError(
+                        'Number of weights does not match number of nodes')
+                else:
+                    for inp in range(len(weights[layer])):
+                        for w in range(len(weights[layer][inp])):
+                            weight[0][inp][w] = weights[layer][inp][w]
+                    self.model.layers[layer].set_weights(weight)
+
 
     def get_weights(self, layer):
         """Returns the weights for a given layer
