@@ -1,4 +1,4 @@
-from network.network import Network
+from network import Network
 
 class NetworkGenerator:
     """Class to generate neural networks of a specific layout.
