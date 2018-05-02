@@ -8,7 +8,7 @@ class Network:
     '''
 
     def __init__(self, num_layers, num_inputs, num_neurons, num_outputs,
-                 activations):
+                 activations, nid):
         '''Initialize network.
 
         :param num_layers: number of layers
@@ -21,6 +21,10 @@ class Network:
         if num_layers < 2:
             raise ValueError('Invalid number of layers (must be ≥ 2')
         self.num_layers = num_layers
+        self.num_inputs = num_inputs
+        self.num_neurons = num_neurons
+        self.num_outputs = num_outputs
+        self.activations = activations
 
         self.model = Sequential()
         self.model.add(Dense(num_neurons, input_dim=num_inputs,
@@ -30,6 +34,7 @@ class Network:
          for i in range(self.num_layers - 2)]
 
         self.model.add(Dense(num_outputs, activation=activations[-1]))
+        self.id = nid
 
     def set_weights(self, layer_numbers, weights):
         """Sets the weights for the specified layers to the specified weights.
@@ -65,7 +70,6 @@ class Network:
                             weight[0][inp][w] = weights[layer][inp][w]
                     self.model.layers[layer].set_weights(weight)
 
-
     def get_weights(self, layer):
         """Returns the weights for a given layer
 
@@ -76,3 +80,26 @@ class Network:
             raise IndexError('Invalid layer number')
 
         return self.model.layers[layer].get_weights()
+
+    def write_to_file(self):
+        """
+        Writes all of the data from the network into a file
+        :return:
+        """
+        file = open('network_{}'.format(self.id), 'w')
+        file.write('{} {} {} {}\n'.format(self.num_layers, self.num_inputs,
+                                          self.num_neurons, self.num_outputs))
+        acts = ''
+        for act in self.activations:
+            acts += act + ' '
+
+        file.write(acts + '\n')
+        for layer in range(self.num_layers):
+            current_weights = self.get_weights(layer)[0]
+            for neuron in current_weights:
+                row = ''
+                for item in neuron:
+                    row += str(item) + ' '
+                file.write(row + ';')
+            file.write('\n')
+        file.close()
