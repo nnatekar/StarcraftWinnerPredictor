@@ -1,5 +1,6 @@
 from keras import Sequential
 from keras.layers import Dense
+import numpy as np
 
 
 def load_network(filename):
@@ -121,3 +122,45 @@ class Network:
                 file.write(row + ';')
             file.write('\n')
         file.close()
+
+    def predict(self, x):
+        """Returns prediction values for each of the inputs
+
+        :param x: list or numpy array of lists with size = num_inputs
+        :return: list of size = len(x) of lists with size = num_outputs
+        """
+        try:
+            if len(x[0]) != self.num_inputs:
+                raise ValueError('Invalid number of inputs.')
+        except TypeError:
+            raise ValueError('Expected input with shape [n, num_inputs]')
+        if not isinstance(x, type(np.array([1]))):
+            x = np.array(x)
+        return self.model.predict(x)
+
+    def evaluate_fitness(self, x, y):
+        """Runs the model on the samples, and then checks how many it predicted
+         correctly.
+
+        :param x: list or numpy array of lists with size = num_inputs
+        :param y: list of the same size as x with the 0 or 1
+        :return: float for percentage of results the model predicted correctly
+        """
+        try:
+            if len(x) != len(y):
+                raise ValueError('Length of x and y differ.')
+            elif len(x[0]) != self.num_inputs:
+                raise ValueError('Invalid number of inputs.')
+            elif len(y[0]) != self.num_outputs:
+                raise ValueError('Invalid number of outputs.')
+        except TypeError:
+            raise ValueError('Expected input with shape [n, num_inputs]')
+
+        if not isinstance(x, type(np.array([1]))):
+            x = np.array(x)
+        if self.num_outputs == 1:
+            predictions = [int(res[0]+.5) for res in self.model.predict(x)]
+            return sum([1 if predictions[i] == y[i][0] else 0
+                        for i in range(len(y))]) / len(y)
+
+
