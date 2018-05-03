@@ -1,11 +1,29 @@
 from keras import Sequential
 from keras.layers import Dense
-import numpy as np
+
+
+def load_network(filename):
+    file = open(filename, 'r')
+    nid = int(filename.split('_')[1])
+    structure = [int(i) for i in str(file.readline()).split(' ')[:-1]]
+    activations = str(file.readline()).split(' ')[:-1]
+
+    n = Network(structure[0], structure[1], structure[2], structure[3],
+                activations, nid)
+    weights = []
+    layers = []
+    for layer in range(structure[0]):
+        layers.append(layer)
+        weights.append([[float(num) for num in sl.split(' ')[:-1]]
+                        for sl in str(file.readline()).split(';')[:-1]])
+    n.set_weights(layers, weights)
+    return n
+
 
 class Network:
-    '''Wrapper class for keras neural networks
+    """Wrapper class for keras neural networks
 
-    '''
+    """
 
     def __init__(self, num_layers, num_inputs, num_neurons, num_outputs,
                  activations, nid):
@@ -43,32 +61,32 @@ class Network:
         :param weights: list of
         :return: None
         """
-
+        current_weight_number = 0
         for layer in layer_numbers:
             if layer < 0 or layer > self.num_layers:
                 raise IndexError('Invalid layer number')
-
-            if weights[layer][0].__class__ == \
+            if weights[current_weight_number][0].__class__ == \
                     self.get_weights(layer)[0].__class__:
-                if len(weights[layer]) != len(self.get_weights(layer)) or len(
-                        weights[layer][0]) != len(self.get_weights(layer)[0]) or \
-                        len(weights[layer][0][0]) \
+                if len(weights[current_weight_number]) != len(self.get_weights(layer)) or len(
+                        weights[current_weight_number][0]) != len(self.get_weights(layer)[0]) or \
+                        len(weights[current_weight_number][0][0]) \
                         != len(self.get_weights(layer)[0][0]):
                     raise ValueError(
                         'Number of weights does not match number of nodes')
                 else:
-                    self.model.layers[layer].set_weights(weights[layer])
+                    self.model.layers[layer].set_weights(weights[current_weight_number])
             else:
                 weight = self.get_weights(layer)
-                if len(weight[0]) != len(weights[layer]) or len(weight[0][0]) \
-                        != len(weights[layer][0]):
+                if len(weight[0]) != len(weights[current_weight_number]) or len(weight[0][0]) \
+                        != len(weights[current_weight_number][0]):
                     raise ValueError(
                         'Number of weights does not match number of nodes')
                 else:
-                    for inp in range(len(weights[layer])):
-                        for w in range(len(weights[layer][inp])):
-                            weight[0][inp][w] = weights[layer][inp][w]
+                    for inp in range(len(weights[current_weight_number])):
+                        for w in range(len(weights[current_weight_number][inp])):
+                            weight[0][inp][w] = weights[current_weight_number][inp][w]
                     self.model.layers[layer].set_weights(weight)
+            current_weight_number += 1
 
     def get_weights(self, layer):
         """Returns the weights for a given layer
@@ -87,7 +105,7 @@ class Network:
         :return:
         """
         file = open('network_{}'.format(self.id), 'w')
-        file.write('{} {} {} {}\n'.format(self.num_layers, self.num_inputs,
+        file.write('{} {} {} {} \n'.format(self.num_layers, self.num_inputs,
                                           self.num_neurons, self.num_outputs))
         acts = ''
         for act in self.activations:
