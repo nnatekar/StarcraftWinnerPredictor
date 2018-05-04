@@ -160,7 +160,8 @@ class Network:
             if x.shape[1] != self.num_inputs:
                 raise ValueError('Invalid number of inputs.')
 
-            if isinstance(y, pd.DataFrame()) or isinstance(y, pd.Series()):
+            if isinstance(y, type(pd.DataFrame())) or isinstance(
+                    y, type(pd.Series())):
                 if x.shape[0] != y.shape[0]:
                     raise ValueError('Length of x and y differ.')
                 if y.shape[1] != self.num_outputs:
