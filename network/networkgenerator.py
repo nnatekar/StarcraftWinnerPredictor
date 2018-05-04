@@ -21,7 +21,7 @@ class NetworkGenerator:
         if activations:
             self.activation = activations
         else:
-            self.activation = ['relu' for _ in range(num_layers - 1)]
+            self.activation = ['sigmoid' for _ in range(num_layers - 1)]
             self.activation.append('sigmoid')
         self.num_inputs = num_inputs
         self.num_outputs = num_outputs
@@ -38,6 +38,10 @@ class NetworkGenerator:
             self.activation)
 
     def generate(self):
+        """Generates a neural network with the given structure specified.
+
+        :return: New neural network with specfied structure and random weights
+        """
         self.networks_created += 1
         return Network(self.num_layers, self.num_inputs, self.num_neurons,
                        self.num_outputs, self.activation,

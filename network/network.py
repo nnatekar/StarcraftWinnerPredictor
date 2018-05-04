@@ -1,9 +1,14 @@
 from keras import Sequential
 from keras.layers import Dense
 import numpy as np
-
+import pandas as pd
 
 def load_network(filename):
+    """Loads a neural network from the specified file name
+
+    :param filename: name of file to read
+    :return: New neural network with weights and structure specifiedi in file
+    """
     file = open(filename, 'r')
     nid = int(filename.split('_')[1])
     structure = [int(i) for i in str(file.readline()).split(' ')[:-1]]
@@ -28,14 +33,14 @@ class Network:
 
     def __init__(self, num_layers, num_inputs, num_neurons, num_outputs,
                  activations, nid):
-        '''Initialize network.
+        """Initialize network.
 
         :param num_layers: number of layers
         :param num_inputs: number of inputs
         :param num_neurons: (list) number of neurons in each layer
         :param num_outputs: number of outputs
         :param activations: (list) activation functions for each layer
-        '''
+        """
 
         if num_layers < 2:
             raise ValueError('Invalid number of layers (must be ≥ 2')
@@ -103,7 +108,7 @@ class Network:
     def write_to_file(self):
         """
         Writes all of the data from the network into a file
-        :return:
+        :return: none
         """
         file = open('network_{}'.format(self.id), 'w')
         file.write('{} {} {} {} \n'.format(self.num_layers, self.num_inputs,
@@ -129,13 +134,17 @@ class Network:
         :param x: list or numpy array of lists with size = num_inputs
         :return: list of size = len(x) of lists with size = num_outputs
         """
-        try:
-            if len(x[0]) != self.num_inputs:
+        if isinstance(x, type(pd.DataFrame())):
+            if x.shape[1] != self.num_inputs:
                 raise ValueError('Invalid number of inputs.')
-        except TypeError:
-            raise ValueError('Expected input with shape [n, num_inputs]')
-        if not isinstance(x, type(np.array([1]))):
-            x = np.array(x)
+        else:
+            try:
+                if len(x[0]) != self.num_inputs:
+                    raise ValueError('Invalid number of inputs.')
+            except TypeError:
+                raise ValueError('Expected input with shape [n, num_inputs]')
+            if not isinstance(x, type(np.array([1]))):
+                x = np.array(x)
         return self.model.predict(x)
 
     def evaluate_fitness(self, x, y):
@@ -146,21 +155,36 @@ class Network:
         :param y: list of the same size as x with the 0 or 1
         :return: float for percentage of results the model predicted correctly
         """
-        try:
-            if len(x) != len(y):
-                raise ValueError('Length of x and y differ.')
-            elif len(x[0]) != self.num_inputs:
-                raise ValueError('Invalid number of inputs.')
-            elif len(y[0]) != self.num_outputs:
-                raise ValueError('Invalid number of outputs.')
-        except TypeError:
-            raise ValueError('Expected input with shape [n, num_inputs]')
 
-        if not isinstance(x, type(np.array([1]))):
-            x = np.array(x)
+        if isinstance(x, type(pd.DataFrame())):
+            if x.shape[1] != self.num_inputs:
+                raise ValueError('Invalid number of inputs.')
+
+            if isinstance(y, pd.DataFrame()) or isinstance(y, pd.Series()):
+                if x.shape[0] != y.shape[0]:
+                    raise ValueError('Length of x and y differ.')
+                if y.shape[1] != self.num_outputs:
+                    raise ValueError('Invalid number of outputs.')
+            else:
+                if x.shape[0] != len(y):
+                    raise ValueError('Length of x and y differ.')
+                if len(y[0]) != self.num_outputs:
+                    raise ValueError('Invalid number of outputs.')
+        else:
+            try:
+                if len(x) != len(y):
+                    raise ValueError('Length of x and y differ.')
+                elif len(x[0]) != self.num_inputs:
+                    raise ValueError('Invalid number of inputs.')
+                elif len(y[0]) != self.num_outputs:
+                    raise ValueError('Invalid number of outputs.')
+            except TypeError:
+                raise ValueError('Expected input with shape [n, num_inputs]')
+
+            if not isinstance(x, type(np.array([1]))):
+                x = np.array(x)
+
         if self.num_outputs == 1:
             predictions = [int(res[0]+.5) for res in self.model.predict(x)]
             return sum([1 if predictions[i] == y[i][0] else 0
                         for i in range(len(y))]) / len(y)
-
-
