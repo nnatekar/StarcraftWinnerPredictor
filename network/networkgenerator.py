@@ -1,5 +1,7 @@
 from network import Network
 
+"""All code written by Yoav Kaliblotzky"""
+
 current_id = 0
 
 class NetworkGenerator:

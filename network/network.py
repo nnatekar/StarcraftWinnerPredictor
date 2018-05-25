@@ -3,6 +3,8 @@ from keras.layers import Dense
 import numpy as np
 import pandas as pd
 
+"""All code written by Yoav Kaliblotzky"""
+
 def load_network(filename):
     """Loads a neural network from the specified file name
 
