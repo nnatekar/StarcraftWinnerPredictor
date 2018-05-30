@@ -3,6 +3,8 @@ from keras.layers import Dense
 import numpy as np
 import pandas as pd
 
+"""All code written by Yoav Kaliblotzky"""
+
 def load_network(filename):
     """Loads a neural network from the specified file name
 
@@ -25,6 +27,49 @@ def load_network(filename):
     n.set_weights(layers, weights)
     return n
 
+
+def evaluate_fitness(network, x, y):
+    """Runs the model on the samples, and then checks how many it predicted
+     correctly.
+
+    :param network: network to check fitness of
+    :param x: list or numpy array of lists with size = num_inputs
+    :param y: list of the same size as x with the 0 or 1
+    :return: float for percentage of results the model predicted correctly
+    """
+    if isinstance(x, type(pd.DataFrame())):
+        if x.shape[1] != network.num_inputs:
+            raise ValueError('Invalid number of inputs.')
+
+        if isinstance(y, type(pd.DataFrame())) or isinstance(
+                y, type(pd.Series())):
+            if x.shape[0] != y.shape[0]:
+                raise ValueError('Length of x and y differ.')
+            if y.shape[1] != network.num_outputs:
+                raise ValueError('Invalid number of outputs.')
+        else:
+            if x.shape[0] != len(y):
+                raise ValueError('Length of x and y differ.')
+            if len(y[0]) != network.num_outputs:
+                raise ValueError('Invalid number of outputs.')
+    else:
+        try:
+            if len(x) != len(y):
+                raise ValueError('Length of x and y differ.')
+            elif len(x[0]) != network.num_inputs:
+                raise ValueError('Invalid number of inputs.')
+            elif len(y[0]) != network.num_outputs:
+                raise ValueError('Invalid number of outputs.')
+        except TypeError:
+            raise ValueError('Expected input with shape [n, num_inputs]')
+
+        if not isinstance(x, type(np.array([1]))):
+            x = np.array(x)
+
+    if network.num_outputs == 1:
+        predictions = [int(res[0]+.5) for res in network.model.predict(x)]
+        return sum([1 if predictions[i] == y[i][0] else 0
+                    for i in range(len(y))]) / len(y)
 
 class Network:
     """Wrapper class for keras neural networks
@@ -146,46 +191,3 @@ class Network:
             if not isinstance(x, type(np.array([1]))):
                 x = np.array(x)
         return self.model.predict(x)
-
-    def evaluate_fitness(self, x, y):
-        """Runs the model on the samples, and then checks how many it predicted
-         correctly.
-
-        :param x: list or numpy array of lists with size = num_inputs
-        :param y: list of the same size as x with the 0 or 1
-        :return: float for percentage of results the model predicted correctly
-        """
-
-        if isinstance(x, type(pd.DataFrame())):
-            if x.shape[1] != self.num_inputs:
-                raise ValueError('Invalid number of inputs.')
-
-            if isinstance(y, type(pd.DataFrame())) or isinstance(
-                    y, type(pd.Series())):
-                if x.shape[0] != y.shape[0]:
-                    raise ValueError('Length of x and y differ.')
-                if y.shape[1] != self.num_outputs:
-                    raise ValueError('Invalid number of outputs.')
-            else:
-                if x.shape[0] != len(y):
-                    raise ValueError('Length of x and y differ.')
-                if len(y[0]) != self.num_outputs:
-                    raise ValueError('Invalid number of outputs.')
-        else:
-            try:
-                if len(x) != len(y):
-                    raise ValueError('Length of x and y differ.')
-                elif len(x[0]) != self.num_inputs:
-                    raise ValueError('Invalid number of inputs.')
-                elif len(y[0]) != self.num_outputs:
-                    raise ValueError('Invalid number of outputs.')
-            except TypeError:
-                raise ValueError('Expected input with shape [n, num_inputs]')
-
-            if not isinstance(x, type(np.array([1]))):
-                x = np.array(x)
-
-        if self.num_outputs == 1:
-            predictions = [int(res[0]+.5) for res in self.model.predict(x)]
-            return sum([1 if predictions[i] == y[i][0] else 0
-                        for i in range(len(y))]) / len(y)
