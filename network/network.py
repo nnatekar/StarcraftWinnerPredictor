@@ -142,6 +142,7 @@ class Network:
     def get_weights(self, layer):
         """Returns the weights for a given layer
 
+        :rtype: object
         :param layer: layer to get weights for
         :return: numpy array of weights of the specified layer
         """
