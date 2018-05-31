@@ -71,6 +71,7 @@ def evaluate_fitness(network, x, y):
         return sum([1 if predictions[i] == y[i][0] else 0
                     for i in range(len(y))]) / len(y)
 
+
 class Network:
     """Wrapper class for keras neural networks
 
@@ -192,3 +193,19 @@ class Network:
             if not isinstance(x, type(np.array([1]))):
                 x = np.array(x)
         return self.model.predict(x)
+
+    # Getter methods for attributes
+    def get_num_layers(self):
+        return self.num_layers
+
+    def get_num_inputs(self):
+        return self.num_inputs
+
+    def get_num_outputs(self):
+        return self.num_outputs
+
+    def get_num_neurons(self):
+        return self.num_neurons
+
+    def get_network_id(self):
+        return self.id
