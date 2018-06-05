@@ -13,7 +13,7 @@ is_worker,started_at,finished_at,died_at
 X = {'result': [], 'cutoff_time': [],
      'num_soldiers_built': [], 'num_soldiers_lost': [],
      'num_buildings_built': [], 'num_buildings_lost': [],
-     'num_workers_build': [], 'num_workers_lost': [],
+     'num_workers_built': [], 'num_workers_lost': [],
      'num_soldiers_destroyed': [], 'num_buildings_destroyed': [],
      'num_workers_destroyed': []}
 
@@ -55,33 +55,35 @@ for game in range(1, 61):
     while current_player == current_game['owner_name'][count]:
         max_bins = 0
         if current_game['finished_at'][count] < cutoff_points[0]:
-            max_bins = 1
+            max_bins = 3
         elif current_game['finished_at'][count] < cutoff_points[1]:
             max_bins = 2
         else:
-            max_bins = 3
+            max_bins = 1
 
-        for i in range(max_bins):
-            if current_game['is_army'][count] == 'True':
+        for j in range(max_bins):
+            i = 2 - j
+            if current_game['is_army'][count]:
                 p1[i]['num_soldiers_built'] += 1
-            elif current_game['is_worker'][count] == 'True':
+            elif current_game['is_worker'][count]:
                 p1[i]['num_workers_built'] += 1
             else:
                 p1[i]['num_buildings_built'] += 1
 
         if str(current_game['died_at'][count]) != 'nan':
             if current_game['died_at'][count] < cutoff_points[0]:
-                max_bins = 1
+                max_bins = 3
             elif current_game['died_at'][count] < cutoff_points[1]:
                 max_bins = 2
             else:
-                max_bins = 3
+                max_bins = 1
 
-            for i in range(max_bins):
-                if current_game['is_army'][count] == 'True':
+            for j in range(max_bins):
+                i = 2 - j
+                if current_game['is_army'][count]:
                     p1[i]['num_soldiers_lost'] += 1
                     p2[i]['num_soldiers_destroyed'] += 1
-                elif current_game['is_worker'][count] == 'True':
+                elif current_game['is_worker'][count]:
                     p1[i]['num_workers_lost'] += 1
                     p2[i]['num_workers_destroyed'] += 1
                 else:
@@ -96,33 +98,35 @@ for game in range(1, 61):
     while count < current_game.shape[0]:
         max_bins = 0
         if current_game['finished_at'][count] < cutoff_points[0]:
-            max_bins = 1
+            max_bins = 3
         elif current_game['finished_at'][count] < cutoff_points[1]:
             max_bins = 2
         else:
-            max_bins = 3
+            max_bins = 1
 
-        for i in range(max_bins):
-            if current_game['is_army'][count] == 'True':
+        for j in range(max_bins):
+            i = 2 - j
+            if current_game['is_army'][count]:
                 p2[i]['num_soldiers_built'] += 1
-            elif current_game['is_worker'][count] == 'True':
+            elif current_game['is_worker'][count]:
                 p2[i]['num_workers_built'] += 1
             else:
                 p2[i]['num_buildings_built'] += 1
 
         if str(current_game['died_at'][count]) != 'nan':
             if current_game['died_at'][count] < cutoff_points[0]:
-                max_bins = 1
+                max_bins = 3
             elif current_game['died_at'][count] < cutoff_points[1]:
                 max_bins = 2
             else:
-                max_bins = 3
+                max_bins = 1
 
-            for i in range(max_bins):
-                if current_game['is_army'][count] == 'True':
+            for j in range(max_bins):
+                i = 2 - j
+                if current_game['is_army'][count]:
                     p2[i]['num_soldiers_lost'] += 1
                     p1[i]['num_soldiers_destroyed'] += 1
-                elif current_game['is_worker'][count] == 'True':
+                elif current_game['is_worker'][count]:
                     p2[i]['num_workers_lost'] += 1
                     p1[i]['num_workers_destroyed'] += 1
                 else:
