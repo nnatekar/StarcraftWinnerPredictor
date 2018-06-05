@@ -20,6 +20,8 @@ playerHistory = {}
 
 def get_dictVal_OR_myNone(nestedDict, accessChain):
     """
+    traverse layers of nestedDict until either the desired value is found or
+        the access chain (i.e. path through layers) is found to be invalid.
     :param accessChain: an access list, e.g. dict[accessChain[0]][accessChain[1]]...
     :return: corresponding dict value or __myNone
     """
@@ -33,7 +35,7 @@ def get_dictVal_OR_myNone(nestedDict, accessChain):
 
         # convert to dict if necessary
         if not isinstance(val, (dict, list)):
-            # if conversion is possible, convert
+            # if conversion is possible, convert to dict
             if '__dict__' in dir(val):
                 val = vars(val)
             # else give up
@@ -48,11 +50,13 @@ def get_dictVal_OR_myNone(nestedDict, accessChain):
         else:
             val = val[s]
 
-    # return found & valid value
+    # return valid value
     return val
 
 def collect_units( replay ):
     """
+    Extract units from replay object into a dictionary.
+    The keys will be an ad hoc unique unit identifier.
     :param replay: the replay object
     :return: units: the replay object with only the desired attributes
     """
@@ -213,9 +217,11 @@ def main():
     # assumes that there is at least one replay
     replay = next(replay_generator)
     replayObj_to_csv(replay, output_filepath, False)
+        # overwrite for the first replay.
 
     for r in replay_generator:
         replayObj_to_csv(r, output_filepath, True)
+            # append for all other replays
 
     return
 
