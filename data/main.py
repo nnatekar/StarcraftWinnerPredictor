@@ -15,6 +15,10 @@ playerHistory = {}
     # This will keep track of how many times each player has played.
     # Used to create unique intergame_id despite the fact that players
         # play games multiple times
+gameHistory = {}
+    # This will be used to keep track of games.
+    # Used to create unique game ids.
+    # keys will be filenames.
 
 # CODE
 
@@ -64,6 +68,13 @@ def collect_units( replay ):
     all_units = {}
         # collect all units here
 
+    # create game_id
+    if replay.filename in gameHistory:
+        game_id = gameHistory[replay.filename]
+    else:
+        gameHistory[replay.filename] = len(gameHistory)+1
+        game_id = gameHistory[replay.filename]
+
     # helper function
     # IMPORTANT this determines which attributes are considered 'desired'
     def transfer_desired_attributes(unitVars_from, unitVars_to):
@@ -72,6 +83,8 @@ def collect_units( replay ):
             unitVars_from,
             ['id']
         )
+        # game info
+        unitVars_to['game_id'] = game_id
         # owner info
         unitVars_to['owner_name'] = get_dictVal_OR_myNone(#unitVars_from.owner.detail_data['name']
             unitVars_from,
@@ -113,6 +126,16 @@ def collect_units( replay ):
         )
         return
 
+    def get_intergame_id(unit):
+        """
+        key for temp_unit
+        inter_game_id cannot simply be unit id can repeat across games.
+        Must be unique to the game unit across any game.
+        We must append owner name and the amount of times he/she has played
+            to the id.
+        """
+        return str(unit['game_id']) + unit['owner_name'] + str(unit['id'])
+
     # collect all units from all players
     for player in replay.players:
 
@@ -134,13 +157,7 @@ def collect_units( replay ):
                 # to hold one simplified unit from player.units
             transfer_desired_attributes(vars(u), temp_unit)
                 # transfer desired attributes from u to temp_unit
-            temp_intergame_id = str(playerHistory[player_name]) + temp_unit['owner_name'] + str(temp_unit['id'])
-                # key for temp_unit
-                # inter_game_id cannot simply be unit id can repeat across games.
-                # Must be unique to the game unit across any game.
-                # We must append owner name and the amount of times he/she has played
-                    # to the id.
-            all_units[ temp_intergame_id ] = temp_unit
+            all_units[ get_intergame_id(temp_unit) ] = temp_unit
                 # add to all_units using key
 
         # collect units from player.killed_units
@@ -148,7 +165,7 @@ def collect_units( replay ):
 
             temp_unit = {}
             transfer_desired_attributes(vars(u), temp_unit)
-            temp_intergame_id = str(playerHistory[player_name]) + temp_unit['owner_name'] + str(temp_unit['id'])
+            temp_intergame_id = get_intergame_id(temp_unit)
 
             # only add unit from killed_units if it wasn't in units
             if temp_intergame_id in all_units:
