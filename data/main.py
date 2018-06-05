@@ -90,6 +90,10 @@ def collect_units( replay ):
             unitVars_from,
             ['owner', 'is_human']
         )
+        unitVars_to['owner_result'] = get_dictVal_OR_myNone(#unitVars_from.owner.result
+            unitVars_from,
+            ['owner', 'result']
+        )
         # booleans
         unitVars_to['is_army'] = get_dictVal_OR_myNone(#unitVars_from.is_army
             unitVars_from,
