@@ -134,7 +134,5 @@ for game in range(1, 61):
             X[x].append(p1[i][x])
             X[x].append(p2[i][x])
 
-for x in X:
-    print(len(X[x]))
 
 pd.DataFrame(X).to_csv('aggregate_data.csv')
