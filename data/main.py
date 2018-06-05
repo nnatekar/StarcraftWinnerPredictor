@@ -53,23 +53,6 @@ def collect_units( replay ):
     :return: units: the replay object with only the desired attributes
     """
 
-    """
-    The documentation at https://pandas-docs.github.io/pandas-docs-travis/generated/pandas.DataFrame.from_dict.html
-    >>> data = {'row_1': [3, 2, 1, 0], 'row_2': ['a', 'b', 'c', 'd']}
-    >>> pd.DataFrame.from_dict(data, orient='index')
-           0  1  2  3
-    row_1  3  2  1  0
-    row_2  a  b  c  d
-    
-    When using the ‘index’ orientation, the column names can be specified manually:
-    
-    >>> pd.DataFrame.from_dict(data, orient='index',
-    ...                        columns=['A', 'B', 'C', 'D'])
-           A  B  C  D
-    row_1  3  2  1  0
-    row_2  a  b  c  d
-    """
-
     all_units = {}
         # collect all units here
 
@@ -155,7 +138,7 @@ def collect_units( replay ):
     return all_units
 
 
-def replayObj_to_csv( replay, csvFilepath ):
+def replayObj_to_csv(replay, csvFilepath, append=False):
 
     # collect all units in the replay
     units = collect_units(replay)
@@ -182,21 +165,41 @@ def replayObj_to_csv( replay, csvFilepath ):
             # 'NA' will represent missing data
         float_format=None,
             # no need to truncate/format floating-point numbers
-        header=True,
+        header=False if append else True,
             # write out column names
         index=True,
             # write row names (indices)
+        mode='a' if append else 'w',
+            # python write codes for appending & overwriting
         line_terminator='\n'
     )
     return
 
 def main():
-    filepath = sys.argv[1]
-        # command line argument
-    replay = sc2reader.load_replay(filepath, load_level=4)
-        # save replay object
-    replayObj_to_csv(replay, 'csvTest.csv')
-        # do everything we want to do to replay
+    dir_filepath = 'replay_files/'
+        # filepath to directory where all of the files are
+    output_filepath = 'output.csv'
+        # filepath to output csv file
+    replay_generator = sc2reader.load_replays(
+        sc2reader.utils.get_files(
+            path=dir_filepath,
+                # look in this directory
+            depth=-1,
+                # infinite depth
+            extension='SC2Replay'
+                # get all files with this extension
+        ),
+        load_level=4
+            # load with this level of detail
+    )
+
+    # assumes that there is at least one replay
+    replay = next(replay_generator)
+    replayObj_to_csv(replay, output_filepath, False)
+
+    for r in replay_generator:
+        replayObj_to_csv(r, output_filepath, True)
+
     return
 
 # if client wants to use this file as a library,
