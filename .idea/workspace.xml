@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b5e01114-279d-44c5-9535-f8cb4f00f4fe" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/data/csvTest.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/data/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/output.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/output.csv" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,8 +18,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/data/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="167" column="40" selection-start-line="167" selection-start-column="40" selection-end-line="167" selection-end-column="40" />
+            <state relative-caret-position="250">
+              <caret line="134" column="33" selection-start-line="134" selection-start-column="33" selection-end-line="134" selection-end-column="33" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -177,15 +179,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24609375" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.41953126" side_tool="true" visible="true" weight="0.43582886" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.41953126" side_tool="true" visible="true" weight="0.3181818" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.4984375" weight="0.004010695" />
       <window_info anchor="bottom" id="Python Console" order="7" sideWeight="0.49921876" weight="0.0026737968" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.5804688" visible="true" weight="0.43582886" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.5804688" weight="0.3181818" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -452,8 +453,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="167" column="40" selection-start-line="167" selection-start-column="40" selection-end-line="167" selection-end-column="40" />
+        <state relative-caret-position="250">
+          <caret line="134" column="33" selection-start-line="134" selection-start-column="33" selection-end-line="134" selection-end-column="33" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

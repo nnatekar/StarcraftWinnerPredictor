@@ -11,6 +11,10 @@ from sc2reader.engine.plugins import APMTracker, SelectionTracker
 __myNone = 'NA'
     # This will represent a missing value from replay data
         # in a dictionary.
+playerHistory = {}
+    # This will keep track of how many times each player has played.
+    # Used to create unique intergame_id despite the fact that players
+        # play games multiple times
 
 # CODE
 
@@ -108,6 +112,17 @@ def collect_units( replay ):
     # collect all units from all players
     for player in replay.players:
 
+        player_dict = vars(player)
+        player_name = get_dictVal_OR_myNone(
+            player_dict,
+            ['name']
+        )
+        if not(player_name in playerHistory) or playerHistory[player_name] is None:
+            playerHistory[player_name] = 1
+                # initialize with first time playing
+        else:
+            playerHistory[player_name] += 1
+
         # collect units from player.units
         for u in player.units:
 
@@ -115,10 +130,12 @@ def collect_units( replay ):
                 # to hold one simplified unit from player.units
             transfer_desired_attributes(vars(u), temp_unit)
                 # transfer desired attributes from u to temp_unit
-            temp_intergame_id = temp_unit['owner_name'] + str(temp_unit['id'])
+            temp_intergame_id = str(playerHistory[player_name]) + temp_unit['owner_name'] + str(temp_unit['id'])
                 # key for temp_unit
-                # cannot simply be id since id is unique to
-                    # a single game
+                # inter_game_id cannot simply be unit id can repeat across games.
+                # Must be unique to the game unit across any game.
+                # We must append owner name and the amount of times he/she has played
+                    # to the id.
             all_units[ temp_intergame_id ] = temp_unit
                 # add to all_units using key
 
@@ -127,7 +144,7 @@ def collect_units( replay ):
 
             temp_unit = {}
             transfer_desired_attributes(vars(u), temp_unit)
-            temp_intergame_id = temp_unit['owner_name'] + str(temp_unit['id'])
+            temp_intergame_id = str(playerHistory[player_name]) + temp_unit['owner_name'] + str(temp_unit['id'])
 
             # only add unit from killed_units if it wasn't in units
             if temp_intergame_id in all_units:
