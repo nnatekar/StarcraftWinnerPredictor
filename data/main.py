@@ -27,11 +27,20 @@ def get_dictVal_OR_myNone(nestedDict, accessChain):
         # or the access chain is found to be invalid
     for s in accessChain:
 
-        if not(isinstance(val, (dict, list))) and ('__dict__' in dir(val)):
-            val = vars(val)
+        # convert to dict if necessary
+        if not isinstance(val, (dict, list)):
+            # if conversion is possible, convert
+            if '__dict__' in dir(val):
+                val = vars(val)
+            # else give up
+            else:
+                return __myNone
 
-        if not(isinstance(val, (dict, list))) or not(s in val) or (val[s] is None):
+        # if the dictionary doesn't have the next value in the access chain,
+            # give up.
+        if not(s in val) or (val[s] is None):
             return __myNone
+        # else, go to next value in access chain.
         else:
             val = val[s]
 
@@ -84,15 +93,15 @@ def collect_units( replay ):
         # booleans
         unitVars_to['is_army'] = get_dictVal_OR_myNone(#unitVars_from.is_army
             unitVars_from,
-            ['is_army']
+            ['_type_class', 'is_army']
         )
         unitVars_to['is_building'] = get_dictVal_OR_myNone(#unitVars_from.is_building
             unitVars_from,
-            ['is_building']
+            ['_type_class', 'is_building']
         )
         unitVars_to['is_worker'] = get_dictVal_OR_myNone(#unitVars_from.is_worker
             unitVars_from,
-            ['is_worker']
+            ['_type_class', 'is_worker']
         )
         # lifespan info
         unitVars_to['started_at'] = get_dictVal_OR_myNone(#unitVars_from.started_at
