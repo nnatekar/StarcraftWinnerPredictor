@@ -54,7 +54,7 @@ class Genetic:
         Toolbox needs aliases: mate, mutate, select, evaluate
         Data from replays passed in as param X and Y(see NN evaluate fitness)
         """
-        self.toolbox.register("mate", , )
+        self.toolbox.register("mate", crossover)
         # TODO write custom crossover function
         self.toolbox.register("mutate"
                               , mutate  # defined below
