@@ -73,7 +73,7 @@ def evaluate_fitness(network, x, y):
         return network.fitness
 
 
-class Network:
+class Network(object):
     """Wrapper class for keras neural networks
 
     """
@@ -199,6 +199,21 @@ class Network:
                 x = np.array(x)
         return self.model.predict(x)
 
+    def __getstate__(self):
+        selfdict = dict()
+        selfdict['num_layers'] = self.num_layers
+        selfdict['num_inputs'] = self.num_inputs
+        selfdict['num_neurons'] = self.num_neurons
+        selfdict['num_outputs'] = self.num_outputs
+        selfdict['activations'] = self.activations
+        selfdict['id'] = self.id
+        selfdict['fitness'] = self.fitness.values
+        selfdict['weights'] = []
+        for layer in range(self.num_layers):
+            selfdict['weights'].append(self.get_weights(layer)[0])
+
+        return selfdict
+
     # Getter methods for attributes
     def get_num_layers(self):
         return self.num_layers
@@ -215,7 +230,18 @@ class Network:
     def get_network_id(self):
         return self.id
 
+
 class FitnessValue:
     def __init__(self, value):
         self.values = value
         self.valid = True if 1 >= value >= 0 else False
+
+    def __eq__(self, other):
+        return self.values == other.values
+
+    def __gt__(self, other):
+        return self.values > other.values
+
+    def __lt__(self, other):
+        return self.values < other.values
+

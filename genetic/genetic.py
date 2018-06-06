@@ -64,7 +64,6 @@ class Genetic:
         self.toolbox.register("select"
                               , tools.selTournament
                               # ...(individuals, k, tournsize, fit_attr='fitness')
-                              , k=self.genSize
                               , tournsize=self.tournsize
                               , fit_attr='fitness')
         self.toolbox.register("evaluate", evaluate, paramX=X, paramY=Y)
