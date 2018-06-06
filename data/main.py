@@ -9,16 +9,16 @@ from sc2reader.engine.plugins import APMTracker, SelectionTracker
 
 # GLOBALS
 __myNone = 'NA'
-    # This will represent a missing value from replay data
-        # in a dictionary.
+# This will represent a missing value from replay data
+# in a dictionary.
 playerHistory = {}
-    # This will keep track of how many times each player has played.
-    # Used to create unique intergame_id despite the fact that players
-        # play games multiple times
+# This will keep track of how many times each player has played.
+# Used to create unique intergame_id despite the fact that players
+# play games multiple times
 gameHistory = {}
-    # This will be used to keep track of games.
-    # Used to create unique game ids.
-    # keys will be filenames.
+# This will be used to keep track of games.
+# Used to create unique game ids.
+# keys will be filenames.
 
 # CODE
 
@@ -31,7 +31,7 @@ def get_dictVal_OR_myNone(nestedDict, accessChain):
     """
 
     val = nestedDict
-        # if len(accessChain) == 0, return nestedDict
+    # if len(accessChain) == 0, return nestedDict
 
     # traverse layers of dict until accessChain finds value
         # or the access chain is found to be invalid
