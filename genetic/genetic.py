@@ -2,6 +2,7 @@
  directly copied and pasted into this file by Yoav"""
 
 import deap
+from deap import base
 from network.network import evaluate_fitness, Network
 import random
 
@@ -10,7 +11,7 @@ class Genetic:
     """ Wrapper class for deap genetic algorithms
     """
 
-    def _init_(self, beginning_networks, data, numgens=10000):
+    def __init__(self, beginning_networks, data, numgens=10000):
         """ Initialize genetic class
 
             :param: self: current genetic class
@@ -21,13 +22,13 @@ class Genetic:
         self.finalCount = 10
         # How many individuals do we want in the end?
         # weight domain (for mutations)
-        self.__weightMAX = 1.0
-        self.__weightMIN = 0.0
+        self.__weightMAX = .5
+        self.__weightMIN = -0.5
 
         # deap algorithm arguments
         self.networks = beginning_networks
         self.data = data
-        self.toolbox = deap.Toolbox()
+        self.toolbox = base.Toolbox()
         self.tournsize = 2
         # number of parents selected from each generation
         self.genSize = 10
@@ -53,7 +54,7 @@ class Genetic:
         Toolbox needs aliases: mate, mutate, select, evaluate
         Data from replays passed in as param X and Y(see NN evaluate fitness)
         """
-        self.toolbox.register("mate",)
+        self.toolbox.register("mate", , )
         # TODO write custom crossover function
         self.toolbox.register("mutate"
                               , mutate  # defined below
@@ -110,13 +111,13 @@ def mutate(individual, mutProb, weightMIN, weightMAX):
         for w in range(len(weights)):
             if random.uniform(0, 1) <= mutProb:
                 # randomize the weight
-                newWeights[w] = random.uniform(weightMIN, weightMAX)
+                weights[w] = random.uniform(weightMIN, weightMAX)
                 # TODO IMPORTANT
                 # Jose doesn't know if we want integers
                 # or floating points. Jose doesn't know
                 # what the weight domain is.
 
-        individual.set_weights(l, weights)
+        individual.set_weights([l], [weights])
         # set weights for one layer
     return
 
@@ -132,8 +133,8 @@ def crossover(parent1, parent2):
 
     # crossover entire layer's weights
     parent1_weights = parent1.get_weights(crossoverLayer)
-    parent1.set_weights(crossoverLayer, parent2.get_weights(crossoverLayer))
-    parent2.set_weights(crossoverLayer, parent1_weights)
+    parent1.set_weights([crossoverLayer], [parent2.get_weights(crossoverLayer)])
+    parent2.set_weights([crossoverLayer], [parent1_weights])
 
     return parent1, parent2
 

@@ -1,4 +1,4 @@
-from network import Network
+from network.network import Network
 
 """All code written by Yoav Kaliblotzky"""
 
