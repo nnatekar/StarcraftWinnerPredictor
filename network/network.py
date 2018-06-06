@@ -9,7 +9,7 @@ def load_network(filename):
     """Loads a neural network from the specified file name
 
     :param filename: name of file to read
-    :return: New neural network with weights and structure specifiedi in file
+    :return: New neural network with weights and structure specified in file
     """
     file = open(filename, 'r')
     nid = int(filename.split('_')[1])
@@ -147,7 +147,7 @@ class Network:
         :param layer: layer to get weights for
         :return: numpy array of weights of the specified layer
         """
-        if layer < 0 or layer > self.num_layers:
+        if layer < 0 or layer >= self.num_layers:
             raise IndexError('Invalid layer number')
 
         return self.model.layers[layer].get_weights()
