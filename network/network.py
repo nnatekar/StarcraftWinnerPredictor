@@ -152,12 +152,15 @@ class Network:
 
         return self.model.layers[layer].get_weights()
 
-    def write_to_file(self):
+    def write_to_file(self, filename=None):
         """
         Writes all of the data from the network into a file
         :return: none
         """
-        file = open('network_{}'.format(self.id), 'w')
+        if filename:
+            file = open(filename, 'w')
+        else:
+            file = open('network_{}'.format(self.id), 'w')
         file.write('{} {} {} {} \n'.format(self.num_layers, self.num_inputs,
                                           self.num_neurons, self.num_outputs))
         acts = ''
