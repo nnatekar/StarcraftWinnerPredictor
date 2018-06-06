@@ -2,7 +2,7 @@
  directly copied and pasted into this file by Yoav"""
 
 import deap
-from deap import base
+from deap import base, tools, algorithms
 from network.network import evaluate_fitness, Network
 import random
 
@@ -62,7 +62,7 @@ class Genetic:
                               , weightMIN=self.__weightMIN
                               , weightMAX=self.__weightMAX)
         self.toolbox.register("select"
-                              , deap.tools.selTournament
+                              , tools.selTournament
                               # ...(individuals, k, tournsize, fit_attr='fitness')
                               , k=self.genSize
                               , tournsize=self.tournsize

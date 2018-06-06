@@ -68,6 +68,8 @@ def evaluate_fitness(network, x, y):
 
     if network.num_outputs == 1:
         predictions = [int(res[0]+.5) for res in network.model.predict(x)]
+        network.fitness = sum([1 if predictions[i] == y[i][0] else 0
+                    for i in range(len(y))]) / len(y)
         return sum([1 if predictions[i] == y[i][0] else 0
                     for i in range(len(y))]) / len(y)
 
@@ -105,6 +107,7 @@ class Network:
 
         self.model.add(Dense(num_outputs, activation=activations[-1]))
         self.id = nid
+        self.fitness = 0
 
     def set_weights(self, layer_numbers, weights):
         """Sets the weights for the specified layers to the specified weights.
