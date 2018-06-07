@@ -12,9 +12,12 @@ y = data[['result']]
 netGenerator = NetworkGenerator(num_layers=4, num_inputs=11, num_neurons=5)
 networks = [netGenerator.generate() for _ in range(10)]
 
-genetic = Genetic(networks, X, )
-endNetworks = genetic.begin(X, y).items
+progress_file = open('progress.txt', 'w')
+for gen in range(10):
+    genetic = Genetic(networks, X, numgens=500)
+    networks = genetic.begin(X, y).items
+    for i in range(10):
+        with open('network{}.pickle', 'wb') as handle:
+            pickle.dump(networks[i], handle, protocol=pickle.HIGHEST_PROTOCOL)
+    progress_file.write('Saved HOF for gen {}'.format((gen+1) * 500))
 
-for i in range(10):
-    with open('network{}.pickle'.format(i), 'wb') as handle:
-        pickle.dump(endNetworks[i], handle, protocol=pickle.HIGHEST_PROTOCOL)
