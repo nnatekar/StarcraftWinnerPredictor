@@ -71,7 +71,7 @@ def evaluate_fitness(network, x, y):
         predictions = [int(preds[i][0]+.5) for i in range(len(preds))]
         network.fitness = FitnessValue(sum([1 if predictions[i] == y['result'][i] else
                                             0 for i in range(y.shape[0])]) / len(y))
-        return network.fitness
+        return network.fitness.values
 
 
 class Network:
