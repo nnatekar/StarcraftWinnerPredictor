@@ -67,9 +67,10 @@ def evaluate_fitness(network, x, y):
             x = np.array(x)
 
     if network.num_outputs == 1:
-        predictions = [int(res[0]+.5) for res in network.model.predict(x)]
-        network.fitness = FitnessValue(sum([1 if predictions[i] == y[i][0] else
-                                            0 for i in range(len(y))]) / len(y))
+        preds = network.model.predict(x)
+        predictions = [int(preds[i][0]+.5) for i in range(len(preds))]
+        network.fitness = FitnessValue(sum([1 if predictions[i] == y['result'][i] else
+                                            0 for i in range(y.shape[0])]) / len(y))
         return network.fitness
 
 
@@ -188,7 +189,11 @@ class Network:
         selfdict['num_outputs'] = self.num_outputs
         selfdict['activations'] = self.activations
         selfdict['id'] = self.id
-        selfdict['fitness'] = self.fitness.values
+        try:
+            selfdict['fitness'] = self.fitness.values
+        except AttributeError:
+            selfdict['fitness'] = FitnessValue(0)
+
         selfdict['weights'] = []
         for layer in range(self.num_layers):
             selfdict['weights'].append(self.get_weights(layer))
@@ -208,6 +213,7 @@ class Network:
         state['model'].add(Dense(state['num_outputs'],
                                  activation=state['activations'][-1]))
         state['fitness'] = FitnessValue(state['fitness'])
+
         for layer in range(state['num_layers']):
             temp = state['model'].layers[layer].get_weights()
             temp[0] = state['weights'][layer]
@@ -234,15 +240,43 @@ class Network:
 
 class FitnessValue:
     def __init__(self, value):
-        self.values = value
-        self.valid = True if 1 >= value >= 0 else False
+        if isinstance(value, FitnessValue):
+            self.values = value.values
+        else:
+            self.values = value
+
+        self.valid = True if 1 >= self.values >= 0 else False
+
 
     def __eq__(self, other):
+        try:
+            self.values
+        except AttributeError:
+            self.values = 0
+        try:
+            other.values
+        except AttributeError:
+            other = FitnessValue(0)
         return self.values == other.values
 
     def __gt__(self, other):
+        try:
+            self.values
+        except AttributeError:
+            self.values = 0
+        try:
+            other.values
+        except AttributeError:
+            other = FitnessValue(0)
         return self.values > other.values
 
     def __lt__(self, other):
+        try:
+            self.values
+        except AttributeError:
+            self.values = 0
+        try:
+            other.values
+        except AttributeError:
+            other = FitnessValue(0)
         return self.values < other.values
-

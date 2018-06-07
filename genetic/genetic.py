@@ -3,7 +3,7 @@
 
 import deap
 from deap import base, tools, algorithms
-from network.network import evaluate_fitness, Network
+from network.network import evaluate_fitness, FitnessValue
 import random
 
 
@@ -114,6 +114,7 @@ def mutate(individual, mutProb, weightMIN, weightMAX):
                     weights[w][n] = random.uniform(weightMIN, weightMAX)
 
         individual.set_weights(l, weights)
+        individual.fitness = FitnessValue(0)
         # set weights for one layer
     return individual,
 
