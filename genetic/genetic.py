@@ -78,7 +78,7 @@ class Genetic:
         # Object that keeps track of the x best individuals.
         # x = self.finalCount = number of individuals we want in the end
 
-        deap.algorithms.eaSimple(population, self.toolbox, cxpb, mutpb, ngen, halloffame)
+        deap.algorithms.eaSimple(population, self.toolbox, cxpb, mutpb, ngen, halloffame = halloffame)
 
         return halloffame
 
