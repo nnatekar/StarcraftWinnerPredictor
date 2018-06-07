@@ -2,6 +2,7 @@ from keras import Sequential
 from keras.layers import Dense
 import numpy as np
 import pandas as pd
+import pickle
 """All code written by Yoav Kaliblotzky"""
 
 
@@ -11,20 +12,9 @@ def load_network(filename):
     :param filename: name of file to read
     :return: New neural network with weights and structure specified in file
     """
-    file = open(filename, 'r')
-    nid = int(filename.split('_')[1])
-    structure = [int(i) for i in str(file.readline()).split(' ')[:-1]]
-    activations = str(file.readline()).split(' ')[:-1]
-
-    n = Network(structure[0], structure[1], structure[2], structure[3],
-                activations, nid)
-    weights = []
-    layers = []
-    for layer in range(structure[0]):
-        layers.append(layer)
-        weights.append([[float(num) for num in sl.split(' ')[:-1]]
-                        for sl in str(file.readline()).split(';')[:-1]])
-    n.set_weights(layers, weights)
+    temp = pickle.load(filename)
+    n = Network(None, None, None, None, None, None, None)
+    n.__setstate__(temp)
     return n
 
 
@@ -89,25 +79,27 @@ class Network:
         :param num_outputs: number of outputs
         :param activations: (list) activation functions for each layer
         """
+        if not (num_neurons or num_outputs or num_inputs or num_layers):
+            pass
+        else:
+            if num_layers < 2:
+                raise ValueError('Invalid number of layers (must be ≥ 2')
+            self.num_layers = num_layers
+            self.num_inputs = num_inputs
+            self.num_neurons = num_neurons
+            self.num_outputs = num_outputs
+            self.activations = activations
 
-        if num_layers < 2:
-            raise ValueError('Invalid number of layers (must be ≥ 2')
-        self.num_layers = num_layers
-        self.num_inputs = num_inputs
-        self.num_neurons = num_neurons
-        self.num_outputs = num_outputs
-        self.activations = activations
+            self.model = Sequential()
+            self.model.add(Dense(num_neurons, input_dim=num_inputs,
+                           activation=activations[0]))
 
-        self.model = Sequential()
-        self.model.add(Dense(num_neurons, input_dim=num_inputs,
-                       activation=activations[0]))
+            [self.model.add(Dense(num_neurons, activation=activations[i + 1]))
+             for i in range(self.num_layers - 2)]
 
-        [self.model.add(Dense(num_neurons, activation=activations[i + 1]))
-         for i in range(self.num_layers - 2)]
-
-        self.model.add(Dense(num_outputs, activation=activations[-1]))
-        self.id = nid
-        self.fitness = FitnessValue(0)
+            self.model.add(Dense(num_outputs, activation=activations[-1]))
+            self.id = nid
+            self.fitness = FitnessValue(0)
 
     def set_weights(self, layer_number, weights):
         """Sets the weights for the specified layers to the specified weights.
@@ -141,26 +133,12 @@ class Network:
         Writes all of the data from the network into a file
         :return: none
         """
-        if filename:
-            file = open(filename, 'w')
-        else:
-            file = open('network_{}'.format(self.id), 'w')
-        file.write('{} {} {} {} \n'.format(self.num_layers, self.num_inputs,
-                                          self.num_neurons, self.num_outputs))
-        acts = ''
-        for act in self.activations:
-            acts += act + ' '
+        if not filename:
+            filename = 'network{}'.format(self.id)
+        data = self.__getstate__()
 
-        file.write(acts + '\n')
-        for layer in range(self.num_layers):
-            current_weights = self.get_weights(layer)
-            for neuron in current_weights:
-                row = ''
-                for item in neuron:
-                    row += str(item) + ' '
-                file.write(row + ';')
-            file.write('\n')
-        file.close()
+        pickle.dump(data, filename)
+
 
     def predict(self, x):
         """Returns prediction values for each of the inputs
@@ -246,7 +224,6 @@ class FitnessValue:
             self.values = value
 
         self.valid = True if 1 >= self.values >= 0 else False
-
 
     def __eq__(self, other):
         try:
