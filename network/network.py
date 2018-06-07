@@ -2,8 +2,8 @@ from keras import Sequential
 from keras.layers import Dense
 import numpy as np
 import pandas as pd
-
 """All code written by Yoav Kaliblotzky"""
+
 
 def load_network(filename):
     """Loads a neural network from the specified file name
@@ -73,7 +73,7 @@ def evaluate_fitness(network, x, y):
         return network.fitness
 
 
-class Network(object):
+class Network:
     """Wrapper class for keras neural networks
 
     """
@@ -152,7 +152,7 @@ class Network(object):
         if layer < 0 or layer >= self.num_layers:
             raise IndexError('Invalid layer number')
 
-        return self.model.layers[layer].get_weights()
+        return self.model.layers[layer].get_weights()[0]
 
     def write_to_file(self, filename=None):
         """
@@ -213,6 +213,22 @@ class Network(object):
             selfdict['weights'].append(self.get_weights(layer)[0])
 
         return selfdict
+
+    def __setstate__(self, state):
+        state['model'] = Sequential()
+        state['model'].add(Dense(state['num_neurons'],
+                                 input_dim=state['num_inputs'],
+                                 activation=state['activations'][0]))
+
+        [state['model'].add(Dense(state['num_neurons'],
+                                  activation=state['activations'][i + 1]))
+         for i in range(state['num_layers'] - 2)]
+
+        state['model'].add(Dense(state['num_outputs'],
+                                 activation=state['activations'][-1]))
+        state['fitness'] = FitnessValue(state['fitness'])
+
+        self.__dict__.update(state)
 
     # Getter methods for attributes
     def get_num_layers(self):
