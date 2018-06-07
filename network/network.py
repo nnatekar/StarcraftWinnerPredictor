@@ -108,39 +108,20 @@ class Network:
         self.id = nid
         self.fitness = FitnessValue(0)
 
-    def set_weights(self, layer_numbers, weights):
+    def set_weights(self, layer_number, weights):
         """Sets the weights for the specified layers to the specified weights.
 
-        :param layer_numbers: list of layers you want to set weights for
+        :param layer_number: list of layers you want to set weights for
         :param weights: list of
         :return: None
         """
-        current_weight_number = 0
-        for layer in layer_numbers:
-            if layer < 0 or layer > self.num_layers:
-                raise IndexError('Invalid layer number')
-            if weights[current_weight_number][0].__class__ == \
-                    self.get_weights(layer)[0].__class__:
-                if len(weights[current_weight_number]) != len(self.get_weights(layer)) or len(
-                        weights[current_weight_number][0]) != len(self.get_weights(layer)[0]) or \
-                        len(weights[current_weight_number][0][0]) \
-                        != len(self.get_weights(layer)[0][0]):
-                    raise ValueError(
-                        'Number of weights does not match number of nodes')
-                else:
-                    self.model.layers[layer].set_weights(weights[current_weight_number])
-            else:
-                weight = self.get_weights(layer)
-                if len(weight[0]) != len(weights[current_weight_number]) or len(weight[0][0]) \
-                        != len(weights[current_weight_number][0]):
-                    raise ValueError(
-                        'Number of weights does not match number of nodes')
-                else:
-                    for inp in range(len(weights[current_weight_number])):
-                        for w in range(len(weights[current_weight_number][inp])):
-                            weight[0][inp][w] = weights[current_weight_number][inp][w]
-                    self.model.layers[layer].set_weights(weight)
-            current_weight_number += 1
+        if len(weights) != len(self.get_weights(layer_number)) or \
+                len(weights[0]) != len(self.get_weights(layer_number)[0]):
+            raise ValueError('Invalid size of weights list')
+
+        temp_weights = self.model.layers[layer_number].get_weights()
+        temp_weights[0] = weights
+        self.model.layers[layer_number].set_weights(temp_weights)
 
     def get_weights(self, layer):
         """Returns the weights for a given layer
@@ -171,7 +152,7 @@ class Network:
 
         file.write(acts + '\n')
         for layer in range(self.num_layers):
-            current_weights = self.get_weights(layer)[0]
+            current_weights = self.get_weights(layer)
             for neuron in current_weights:
                 row = ''
                 for item in neuron:
@@ -210,7 +191,7 @@ class Network:
         selfdict['fitness'] = self.fitness.values
         selfdict['weights'] = []
         for layer in range(self.num_layers):
-            selfdict['weights'].append(self.get_weights(layer)[0])
+            selfdict['weights'].append(self.get_weights(layer))
 
         return selfdict
 
@@ -227,6 +208,10 @@ class Network:
         state['model'].add(Dense(state['num_outputs'],
                                  activation=state['activations'][-1]))
         state['fitness'] = FitnessValue(state['fitness'])
+        for layer in range(state['num_layers']):
+            temp = state['model'].layers[layer].get_weights()
+            temp[0] = state['weights'][layer]
+            state['model'].layers[layer].set_weights(temp)
 
         self.__dict__.update(state)
 

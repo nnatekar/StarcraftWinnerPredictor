@@ -22,8 +22,8 @@ class Genetic:
         self.finalCount = 10
         # How many individuals do we want in the end?
         # weight domain (for mutations)
-        self.__weightMAX = .5
-        self.__weightMIN = -0.5
+        self.__weightMAX = 1
+        self.__weightMIN = -1
 
         # deap algorithm arguments
         self.networks = beginning_networks
@@ -108,15 +108,12 @@ def mutate(individual, mutProb, weightMIN, weightMAX):
 
         # for all weights in this layer
         for w in range(len(weights)):
-            if random.uniform(0, 1) <= mutProb:
-                # randomize the weight
-                weights[w] = random.uniform(weightMIN, weightMAX)
-                # TODO IMPORTANT
-                # Jose doesn't know if we want integers
-                # or floating points. Jose doesn't know
-                # what the weight domain is.
+            for n in range(len(weights[w])):
+                if random.uniform(0, 1) <= mutProb:
+                    # randomize the weight
+                    weights[w][n] = random.uniform(weightMIN, weightMAX)
 
-        individual.set_weights([l], [weights])
+        individual.set_weights(l, weights)
         # set weights for one layer
     return
 
@@ -132,8 +129,8 @@ def crossover(parent1, parent2):
 
     # crossover entire layer's weights
     parent1_weights = parent1.get_weights(crossoverLayer)
-    parent1.set_weights([crossoverLayer], [parent2.get_weights(crossoverLayer)])
-    parent2.set_weights([crossoverLayer], [parent1_weights])
+    parent1.set_weights(crossoverLayer, parent2.get_weights(crossoverLayer))
+    parent2.set_weights(crossoverLayer, parent1_weights)
 
     return parent1, parent2
 
