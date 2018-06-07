@@ -115,7 +115,7 @@ def mutate(individual, mutProb, weightMIN, weightMAX):
 
         individual.set_weights(l, weights)
         # set weights for one layer
-    return
+    return individual,
 
 
 def crossover(parent1, parent2):
