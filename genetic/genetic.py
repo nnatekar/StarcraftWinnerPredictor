@@ -22,8 +22,8 @@ class Genetic:
         self.finalCount = 10
         # How many individuals do we want in the end?
         # weight domain (for mutations)
-        self.__weightMAX = 1
-        self.__weightMIN = -1
+        self.__weightMAX = 1.5
+        self.__weightMIN = -1.5
 
         # deap algorithm arguments
         self.networks = beginning_networks
