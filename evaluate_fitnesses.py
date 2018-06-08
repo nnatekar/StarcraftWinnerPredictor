@@ -2,6 +2,7 @@ from network.network import evaluate_fitness
 import pickle
 import pandas as pd
 import sys
+from random import randint
 
 data = pd.read_csv('./data/aggregate_data.csv')
 X = data[[x for x in data if x != 'result']]
@@ -26,7 +27,8 @@ if len(sys.argv) == 2 or len(sys.argv) == 3:
 elif len(sys.argv) == 4:
     for i in range(int((int(sys.argv[2])-int(sys.argv[1]))/int(sys.argv[3]))):
         print(int(sys.argv[1]) + i * int(sys.argv[3]))
-        with open('network{}.pickle'.format(int(sys.argv[1]) + i * int(sys.argv[3])), 'rb') as handle:
+        num = randint(0,9)
+        with open('network{}.pickle'.format(int(sys.argv[1]) + num * int(sys.argv[3])), 'rb') as handle:
             n = pickle.load(handle)
 
         print('--Gen {}--'.format(i + 1))
