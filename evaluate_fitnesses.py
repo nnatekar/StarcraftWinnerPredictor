@@ -24,8 +24,8 @@ if len(sys.argv) == 2 or len(sys.argv) == 3:
 
 # argv[1] = start, argv[2] = end, argv[3] = interval in between
 elif len(sys.argv) == 4:
-    for i in range((sys.argv[2]-sys.argv[1])/sys.argv[3]):
-        with open('network{}.pickle'.format(int(sys.argv[1]) + i * sys.argv[3]), 'rb') as handle:
+    for i in range((int(sys.argv[2])-int(sys.argv[1]))/int(sys.argv[3])):
+        with open('network{}.pickle'.format(int(sys.argv[1]) + i * int(sys.argv[3])), 'rb') as handle:
             n = pickle.load(handle)
 
         print('--Gen {}--'.format(i + 1))
