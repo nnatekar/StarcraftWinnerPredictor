@@ -12,8 +12,8 @@ y = data[['result']]
 netGenerator = NetworkGenerator(num_layers=4, num_inputs=11, num_neurons=5)
 networks = [netGenerator.generate() for _ in range(10)]
 
-for gen in range(10):
-    genetic = Genetic(networks, X, numgens=5)
+for gen in range(100):
+    genetic = Genetic(networks, X, numgens=10)
     networks = genetic.begin(X, y).items
     for i in range(10):
         with open('network{}.pickle'.format((gen * 10) + i), 'wb') as handle:

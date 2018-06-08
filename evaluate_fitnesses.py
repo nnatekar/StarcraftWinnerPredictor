@@ -26,8 +26,9 @@ if len(sys.argv) == 2 or len(sys.argv) == 3:
 # argv[1] = start, argv[2] = end, argv[3] = interval in between
 elif len(sys.argv) == 4:
     for i in range(int((int(sys.argv[2])-int(sys.argv[1]))/int(sys.argv[3]))):
-        print(int(sys.argv[1]) + i * int(sys.argv[3]))
-        num = randint(0,9)
+        num = randint(0, 9)
+        print(int(sys.argv[1]) + num * int(sys.argv[3]))
+        n = None
         with open('network{}.pickle'.format(int(sys.argv[1]) + num * int(sys.argv[3])), 'rb') as handle:
             n = pickle.load(handle)
 
@@ -38,4 +39,3 @@ elif len(sys.argv) == 4:
         for j in range(10):
             print('Prediction: {} | Actual: {}'.format(vals[j][0],
                                                        y['result'][j]))
-
