@@ -10,7 +10,7 @@ for x in X:
 y = data[['result']]
 
 # Argument is starting number (network620, network70, etc.)
-if 3 <= len(sys.argv) >= 2:
+if len(sys.argv) == 2 or len(sys.argv) == 3:
     for i in range(10):
         with open('network{}.pickle'.format(int(sys.argv[1]) + i), 'rb') as handle:
             n = pickle.load(handle)

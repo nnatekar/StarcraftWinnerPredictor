@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5e01114-279d-44c5-9535-f8cb4f00f4fe" name="Default" comment="More functionality">
+    <list default="true" id="b5e01114-279d-44c5-9535-f8cb4f00f4fe" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evaluate_fitnesses.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluate_fitnesses.py" afterDir="false" />
     </list>
@@ -29,8 +29,8 @@
       <file leaf-file-name="evaluate_fitnesses.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/evaluate_fitnesses.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="16" column="65" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
+            <state relative-caret-position="216">
+              <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
               <folding>
                 <element signature="e#0#44#0" expanded="true" />
               </folding>
@@ -340,7 +340,28 @@
       <option name="project" value="LOCAL" />
       <updated>1528430853165</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="More functionality">
+      <created>1528430939847</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1528430939847</updated>
+    </task>
+    <task id="LOCAL-00018" summary="More functionality">
+      <created>1528431036354</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1528431036354</updated>
+    </task>
+    <task id="LOCAL-00019" summary="More functionality">
+      <created>1528431344222</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1528431344222</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TodoView">
@@ -727,8 +748,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/evaluate_fitnesses.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="65" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
+        <state relative-caret-position="216">
+          <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
           <folding>
             <element signature="e#0#44#0" expanded="true" />
           </folding>
