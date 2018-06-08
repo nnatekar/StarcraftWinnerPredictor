@@ -13,7 +13,7 @@ if len(sys.argv) >= 2:
             n = pickle.load(handle)
         if len(sys.argv) == 3 and i == 0:
             vals = n.predict(X)
-            for j in range(len(vals)):
+            for j in range(30):
                 print('Prediction: {} | Actual: {}'.format(vals[j][0],
                                                            y['result'][j]))
 
