@@ -16,6 +16,6 @@ for gen in range(100):
     genetic = Genetic(networks, X, numgens=10)
     networks = genetic.begin(X, y).items
     for i in range(10):
-        with open('network{}.pickle'.format((gen * 10) + i), 'wb') as handle:
+        with open('network{}.pickle'.format((gen * 10) + i + 100), 'wb') as handle:
             pickle.dump(networks[i], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
