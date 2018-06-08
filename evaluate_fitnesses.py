@@ -14,8 +14,8 @@ if len(sys.argv) >= 2:
         if len(sys.argv) == 3 and i == 0:
             vals = n.predict(X)
             for j in range(len(vals)):
-                print('Prediction: {} | Actual: {}'.format(vals[i][0],
-                                                           y['result'][i]))
+                print('Prediction: {} | Actual: {}'.format(vals[j][0],
+                                                           y['result'][j]))
 
         print(evaluate_fitness(n, X, y))
 
